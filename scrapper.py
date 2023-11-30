@@ -67,14 +67,23 @@ def find_all_tweets(driver) -> list:
             "Error at method fetch_all_tweets : {}".format(ex))
         return []
     
+from typing import Union
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+
 def find_content(tweet) -> Union[str, None]:
-        try:
-            content_element = tweet.find_element(By.CSS_SELECTOR, 'div[lang]')
-            return content_element.text
-        except NoSuchElementException:
-            return ""
-        except Exception as ex:
-            logger.exception("Error at method find_content : {}".format(ex))
+    """
+    Finds and returns the content of a tweet.
+    Returns:
+        The content of the tweet as a string, or None if the content cannot be found.
+    """
+    try:
+        content_element = tweet.find_element(By.CSS_SELECTOR, 'div[lang]')
+        return content_element.text
+    except NoSuchElementException:
+        return ""
+    except Exception as ex:
+        logger.exception("Error at method find_content : {}".format(ex))
 
 
 def find_like(tweet) -> Union[int, None]:
@@ -179,6 +188,17 @@ def wait_until_completion(driver) -> None:
         logger.exception('Error at wait_until_completion: {}'.format(ex))
 
 def fetch_and_store_data(driver, user):
+    """
+    Fetches and stores data from tweets for a given user.
+
+    Args:
+        driver: The web driver used to interact with the web page.
+        user: The username of the user whose tweets are being fetched.
+
+    Returns:
+        A dictionary containing the fetched tweet data.
+    """
+
     
     posts_data = {}
     time.sleep(5)
@@ -254,6 +274,16 @@ def fetch_and_store_data(driver, user):
 
 
 def cronos_fun(user, driver) -> pd.DataFrame:
+    """
+    Fetches and stores data from Twitter for a given user.
+
+    Args:
+        user (str): The Twitter username of the user.
+        driver: The driver object used for web scraping.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the fetched data.
+    """
  
     url = "https://twitter.com"
     #driver.execute_script("window.open('');")
@@ -268,6 +298,15 @@ def cronos_fun(user, driver) -> pd.DataFrame:
     return a
     
 def segundos_a_segundos_minutos_y_horas(segundos) -> str:
+    """
+    Converts seconds to hours, minutes, and seconds.
+
+    Args:
+        segundos (int): The number of seconds to convert.
+
+    Returns:
+        str: The converted time in the format "HH:MM:SS".
+    """
     horas = int(segundos / 60 / 60)
     segundos -= horas*60*60
     minutos = int(segundos/60)

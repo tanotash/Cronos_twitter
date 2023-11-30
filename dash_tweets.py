@@ -6,8 +6,15 @@ import pandas as pd
 import os
 from dotenv import load_dotenv 
 load_dotenv()
-def update():
 
+
+def update():
+    """
+    Update function retrieves and processes tweets data from a database.
+
+    Returns:
+        pandas.DataFrame: Processed tweets data.
+    """
     engine = sa.create_engine(
         str(os.getenv("CONEXION")),
         echo=False,
@@ -26,7 +33,7 @@ def update():
 
     df['hashtags'] = df['hashtags'].replace(r'\{|\}', '', regex=True)
 
-    return df   
+    return df
 
 df = update() 
 
@@ -115,15 +122,22 @@ app.layout = html.Div([
 
 ])
 
-def df():
-    df = update()
-    return df
 
 #callbacks
 @app.callback(Output('tabla', 'data'),
           Input('interval_component', 'n_intervals'))
 
+
 def update_cuenta_regresiva(n):
+    """
+    Update the cuenta regresiva.
+
+    Parameters:
+    n (int): The number of cuenta regresiva.
+
+    Returns:
+    dict: A dictionary containing the updated cuenta regresiva records.
+    """
     df = update()
     time.sleep(1000)
     return df.to_dict('records')
