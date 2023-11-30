@@ -327,7 +327,7 @@ cronos['content'] = cronos['content'].str.replace('\n','')
 
 
 engine = sa.create_engine(
-    "postgresql+psycopg2://postgres:ashwin@localhost:5432/cronos",
+    str(os.getenv("CONEXION")),
     echo=False,
 )
 

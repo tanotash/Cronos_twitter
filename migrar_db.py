@@ -1,9 +1,12 @@
 import sqlalchemy as sa
 import pandas as pd
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 engine = sa.create_engine(
-    "postgresql+psycopg2://postgres:ashwin@localhost:5432/cronos",
-    echo=False,
+        str(os.getenv("CONEXION")),
+        echo=False,
     )
 df = pd.read_sql('tweets', engine,)
 

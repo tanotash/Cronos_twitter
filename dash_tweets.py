@@ -3,12 +3,13 @@ import datetime as dt
 import time 
 from dash import Dash, html, dash_table,  dcc,  Input, Output
 import pandas as pd
-
-
+import os
+from dotenv import load_dotenv 
+load_dotenv()
 def update():
 
     engine = sa.create_engine(
-        "postgresql+psycopg2://postgres:ashwin@localhost:5432/cronos",
+        str(os.getenv("CONEXION")),
         echo=False,
     )
 
