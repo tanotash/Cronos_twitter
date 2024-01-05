@@ -13,4 +13,10 @@ To run this repository
   
   `cd Cronos_twitter`
   
-  `pip install -r requirements. txt`
+  `pip install -r requirements.txt`
+  
+  to run scrapper 
+  `python3 scrapper.py`
+
+  to run dashboard
+  `python3 dash_tweets.py`
