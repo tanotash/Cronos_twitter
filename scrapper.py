@@ -53,6 +53,7 @@ def scroll_down(driver) -> None:
         body = driver.find_element(By.CSS_SELECTOR, 'body')
         for _ in range(randint(1, 5)):
             body.send_keys(Keys.SPACE)
+            time.sleep(randint(1, 3))
     except Exception as ex:
         logger.exception("Error at scroll_down method {}".format(ex))
 
@@ -77,15 +78,14 @@ def find_content(tweet) -> Union[str, None]:
     Returns:
         The content of the tweet as a string, or None if the content cannot be found.
     """
-    if tweet.find_element(By.CSS_SELECTOR, 'div[lang]'):
     
-        try:
-            content_element = tweet.find_element(By.CSS_SELECTOR, 'div[lang]')
-            return content_element.text
-        except NoSuchElementException:
+    try:
+        content_element = tweet.find_element(By.CSS_SELECTOR, 'div[lang]')
+        return content_element.text
+    except NoSuchElementException:
             return ""
-        except Exception as ex:
-            logger.exception("Error at method find_content : {}".format(ex))
+    except Exception as ex:
+       logger.exception("Error at method find_content : {}".format(ex))
 
 
 def find_like(tweet) -> Union[int, None]:
@@ -326,6 +326,11 @@ header = Headers().generate()['User-Agent']
 options.add_argument('--disable-notifications')
 options.add_argument('--disable-cache')
 options.add_argument('--disable-popup-blocking')
+options.add_argument("--disable-infobars")  # Desactiva la barra de información
+options.add_argument("--disable-extensions")  # Desactiva las extensiones
+options.add_argument("--disable-dev-shm-usage")  # Desactiva el uso de /dev/shm
+options.add_argument("--no-sandbox")  # Desactiva el uso de sandbox
+options.add_argument("--disable-gpu")  # Desactiva el uso de la GPU
 options.add_argument('--user-agent={}'.format(header))
 #options.add_argument("--disable-gpu") 
 
