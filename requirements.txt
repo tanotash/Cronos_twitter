@@ -6,3 +6,5 @@ python_dateutil==2.8.2
 pytz==2023.3.post1
 selenium==4.15.2
 SQLAlchemy==2.0.23
+psycopg2
+dash-bootstrap-components

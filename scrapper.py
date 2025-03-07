@@ -51,8 +51,8 @@ def scroll_down(driver) -> None:
     """Helps to scroll down web page"""
     try:
         body = driver.find_element(By.CSS_SELECTOR, 'body')
-        for _ in range(randint(1, 3)):
-            body.send_keys(Keys.PAGE_DOWN)
+        for _ in range(randint(1, 5)):
+            body.send_keys(Keys.SPACE)
     except Exception as ex:
         logger.exception("Error at scroll_down method {}".format(ex))
 
@@ -77,13 +77,15 @@ def find_content(tweet) -> Union[str, None]:
     Returns:
         The content of the tweet as a string, or None if the content cannot be found.
     """
-    try:
-        content_element = tweet.find_element(By.CSS_SELECTOR, 'div[lang]')
-        return content_element.text
-    except NoSuchElementException:
-        return ""
-    except Exception as ex:
-        logger.exception("Error at method find_content : {}".format(ex))
+    if tweet.find_element(By.CSS_SELECTOR, 'div[lang]'):
+    
+        try:
+            content_element = tweet.find_element(By.CSS_SELECTOR, 'div[lang]')
+            return content_element.text
+        except NoSuchElementException:
+            return ""
+        except Exception as ex:
+            logger.exception("Error at method find_content : {}".format(ex))
 
 
 def find_like(tweet) -> Union[int, None]:
@@ -209,7 +211,7 @@ def fetch_and_store_data(driver, user):
     all_ready_fetched_posts = []
     wait_until_completion(driver)
     wait_until_tweets_appear(driver)
-    retry = 15 # retry 10 times if no tweets are found
+    retry = 5 # retry 10 times if no tweets are found
     try:
 
 
@@ -286,6 +288,7 @@ def cronos_fun(user, driver) -> pd.DataFrame:
     """
  
     url = "https://twitter.com"
+    
     #driver.execute_script("window.open('');")
     #driver.switch_to.window(driver.window_handles[1])
     driver.get(f'{url}/{user}')
@@ -315,7 +318,9 @@ def segundos_a_segundos_minutos_y_horas(segundos) -> str:
     
 from users import users
 
+
 options = ChromeOptions()
+options.add_argument("--headless")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 header = Headers().generate()['User-Agent']
 options.add_argument('--disable-notifications')
@@ -323,14 +328,22 @@ options.add_argument('--disable-cache')
 options.add_argument('--disable-popup-blocking')
 options.add_argument('--user-agent={}'.format(header))
 
-driver = webdriver.Chrome(options=options)
-url = "https://twitter.com"
+driver = webdriver.Chrome(options=options) 
+
+
+#driver = webdriver.Chrome()
+
+url = "https://x.com"
 driver.get(f'{url}/i/flow/login')
 
 driver.implicitly_wait(10)
 username = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[autocomplete="username"]')))
 username.send_keys(os.getenv('USER'))
 username.send_keys(Keys.ENTER)
+
+usert = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[name="text"]')))
+usert.send_keys(os.getenv('USERT'))
+usert.send_keys(Keys.ENTER)
 
 password = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[name="password"]')))
 password.send_keys(os.getenv('PASSW'))
@@ -364,11 +377,12 @@ cronos['alive'] = cronos['alive'].astype(str)
 cronos['content'] = cronos['content'].astype(str)
 cronos['content'] = cronos['content'].str.replace('\n','')
 
-
+print(cronos)
 engine = sa.create_engine(
     str(os.getenv("CONEXION")),
     echo=False,
 )
+
 
 cronos.to_sql('tweets', engine, if_exists='append', index=False)  
 
