@@ -80,7 +80,7 @@ app.layout = dbc.Container([
                 style_header={'backgroundColor': 'navy', 'color': 'white', 'fontWeight': 'bold'},
                 style_data={'backgroundColor': '#f8f9fa', 'color': 'black'},
                 page_action='native',
-                page_size=10,
+                
                 fixed_rows={'headers': False},
                 )
         ], width=12),

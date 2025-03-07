@@ -7,6 +7,10 @@ scrapping project that searches information about users to put into a dashboard 
 - dash_tweets.py that consults in real time a DB of PostgreSQL to show a DataFrame about the Twitter scrapper
 - migrar_db.py Migrates tweets data from the ***'Main'*** table to the ***'History'*** table in the database. this script like the first one needs to run in cronjobs at midnight to start the new day or by the filter used in dash_tweets.py to show the information
 
+
+![dashboard](table.png)
+
+
 To run this repository 
 
   `git clone https://github.com/tanotash/Cronos_twitter.git`
@@ -20,3 +24,6 @@ To run this repository
 
   to run dashboard
   `python3 dash_tweets.py`
+
+  to run migration 
+  `python3 migrar_db.py`
