@@ -320,13 +320,14 @@ from users import users
 
 
 options = ChromeOptions()
-options.add_argument("--headless")
+#options.add_argument("--headless")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 header = Headers().generate()['User-Agent']
 options.add_argument('--disable-notifications')
 options.add_argument('--disable-cache')
 options.add_argument('--disable-popup-blocking')
 options.add_argument('--user-agent={}'.format(header))
+#options.add_argument("--disable-gpu") 
 
 driver = webdriver.Chrome(options=options) 
 
