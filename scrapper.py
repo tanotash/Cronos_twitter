@@ -265,7 +265,7 @@ def fetch_and_store_data(driver, user, max_tweets=100):
         logger.exception("Error at method fetch_and_store_data : {}".format(ex))
         return ''
 
-def cronos_fun(user, driver, max_tweets=100) -> pd.DataFrame:
+def cronos_fun(user, driver, max_tweets=10, max_hours_alive=24) -> pd.DataFrame:
     """
     Fetches and stores data from Twitter for a given user.
 
@@ -273,6 +273,7 @@ def cronos_fun(user, driver, max_tweets=100) -> pd.DataFrame:
         user (str): The Twitter username of the user.
         driver: The driver object used for web scraping.
         max_tweets: The maximum number of tweets to fetch.
+        max_hours_alive: The maximum number of hours a tweet can be alive to be displayed.
 
     Returns:
         pd.DataFrame: A DataFrame containing the fetched data.
@@ -283,6 +284,12 @@ def cronos_fun(user, driver, max_tweets=100) -> pd.DataFrame:
 
     a = pd.DataFrame(a)
     a = a.transpose()
+
+    # Filter tweets based on max_hours_alive
+    a['posted_time'] = pd.to_datetime(a['posted_time']).dt.tz_convert('America/cancun')
+    hoy = datetime.datetime.now(datetime.timezone.utc).astimezone(pytz.timezone('America/cancun'))
+    a['alive'] = (hoy - a['posted_time']).dt.total_seconds() / 3600  # Convert seconds to hours
+    a = a[a['alive'] < max_hours_alive]  # Filter tweets older than max_hours_alive
 
     return a
 
@@ -344,7 +351,7 @@ cronos = pd.DataFrame()
 now = time.time()
 
 for user in users:
-    a = cronos_fun(user, driver=driver, max_tweets=2)  # Specify the number of tweets to fetch
+    a = cronos_fun(user, driver=driver, max_tweets=2, max_hours_alive=24)  # Specify the number of tweets to fetch
    
     cronos = pd.concat([cronos, a])
 
